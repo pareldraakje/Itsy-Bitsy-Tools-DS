@@ -23,8 +23,8 @@
 **
 
 new: simp 1 1 36474 "lifephotographer_pilla" 2 0 9000
-flto 10 255
-sets name "tooltip" "Aging Photographer is disabled"
+flto 10 214
+sets name "tooltip" "Photographer is disabled"
 
 **
 ** Photographer Construction script
@@ -55,10 +55,10 @@ scrp 1 1 36474 1
 ** Toggle the variable
 	doif mame "lifePhotographer" eq 1
 		setv mame "lifePhotographer" 0
-		sets name "tooltip" "Aging Photographer is disabled"
+		sets name "tooltip" "Photographer is disabled"
 	else
 		setv mame "lifePhotographer" 1
-		sets name "tooltip" "Aging Photographer is enabled"
+		sets name "tooltip" "Photographer is enabled"
 	endi
 ** Set the pose
 	targ ownr
@@ -73,20 +73,20 @@ scrp 1 1 36474 127
 	doif mame "lifePhotographer" eq 1
 * make birth photographer, who will
 * take a photo after about five seconds
-	inst
-	setv va00 hist type _p1_ _p2_
-	seta va02 mtoc _p1_
-	doif va00 = 3 and va02 <> null
-	targ va02
-		doif cage eq 2 or cage eq 4 or cage eq 5
-			new: simp 1 2 37 "blnk" 0 0 0
-			seta ov00 va02
-			sets ov01 _p1_
-	* randomise slightly, so creatures are more
-	* likely to be in different poses
-			tick rand 90 120
+		inst
+		setv va00 hist type _p1_ _p2_
+		seta va02 mtoc _p1_
+		doif va00 = 3 and va02 <> null
+			targ va02
+			doif cage eq 2 or cage eq 4 or cage eq 5
+				new: simp 1 2 37 "blnk" 0 0 0
+				seta ov00 va02
+				sets ov01 _p1_
+* randomise slightly, so creatures are more
+* likely to be in different poses
+				tick rand 10 30
+			endi
 		endi
-	endi
 	endi
 endm
 
