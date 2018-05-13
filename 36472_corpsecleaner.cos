@@ -12,6 +12,7 @@
 *# Web Label = "CAOS of the Creatures Realm"
 
 *# attach organexp2_mea.c16 corpsecleaner_meapilla.catalogue
+*# depend blnk.c16
 
 **
 ** Install script
@@ -44,6 +45,8 @@ scrp 1 1 36472 10
 	tick 200
 ** Float relative to the screen
 	frel null
+** Activate!
+	mesg writ ownr 0
 endm
 
 **
