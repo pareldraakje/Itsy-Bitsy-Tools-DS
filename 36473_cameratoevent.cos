@@ -1,0 +1,123 @@
+*
+* CAOS2PRAY CHUNK
+*
+*# Pray-File "cameraToEvent_meapilla.agents"
+*# DS-Name "Camera To Event Tool"
+
+*# desc = "This tool tracks the events that happen in your world by moving your camera over there. \nIdea by Mea, coding by Pilla"
+*# Agent Animation File = "organexp2_mea.c16"
+*# Agent Sprite First Image = 38
+*# Agent Animation Gallery = "organexp2_mea"
+*# Web URL = "https://caosofthecreaturesrealm.wordpress.com/"
+*# Web Label = "CAOS of the Creatures Realm"
+
+*# attach organexp2_mea.c16 cameratoevent_meapilla.catalogue
+
+**
+** Install script
+**
+
+** The corpse cleaner and cameraToEvent agents are separate agents with their own timer.
+** They get injected when the setting is on and removed when it's off.
+
+** new: simp 2 24 36473 "blnk" 1 0 0
+** corpse cleaner agent
+
+** new: simp 2 25 36473 "blnk" 1 0 0
+** camera to event agent
+
+**
+** Create the Camera to event button
+**
+
+new: simp 1 1 36473 "organexp2_mea" 2 38 9000
+flto 10 197
+sets name "tooltip" "Camera2Event is disabled"
+
+**
+** Organ exporter Construction script
+**
+
+**
+** Camera to event constructor script
+scrp 1 1 36473 10
+** Remove other camera to event instances
+	enum 1 1 36473
+		doif targ ne ownr
+			kill targ
+		endi
+	next
+
+	targ ownr
+** Set attributes
+	attr 38
+endm
+
+**
+** Organ exporter "Camera to Event" button click
+**
+
+scrp 1 1 36473 1
+** Toggle the variable
+	doif mame "cameraToEvent" eq 1
+		setv mame "cameraToEvent" 0
+		sets name "tooltip" "Camera2Event is disabled"
+	else
+		setv mame "cameraToEvent" 1
+		sets name "tooltip" "Camera2Event is enabled"
+	endi
+** Set the pose
+	targ ownr
+	pose name "cameraToEvent"
+endm
+
+**
+** Life event script
+**
+scrp 1 1 36473 127
+	doif mame "cameraToEvent" eq 1
+		seta va00 mtoa _p1_
+		setv va01 hist type _p1_ _p2_
+	
+	dbg: outs "cameraToEvent"
+	dbg: outv va01
+		doif va00 ne null
+			doif va01 eq 0 or va01 eq 1 or va01 eq 2 or va01 eq 3 or va01 eq 7 or va01 eq 12 or va01 eq 16 or va01 eq 17
+				targ va00
+				doif targ ne null
+				cmrt 0
+				endi
+			endi
+			doif va01 eq 10
+				targ mtoa hist mon1 _p1_ _p2_
+				doif targ ne null
+				cmrt 0
+				endi
+			endi
+			doif va01 eq 9
+				targ mtoa hist mon2 _p1_ _p2_
+				doif targ ne null
+				cmrt 0
+				endi
+			endi
+		endi
+	endi
+endm
+
+
+**
+** Error script
+**
+*scrp 1 1 36473 255
+*	setv name "camera2Event" 0
+*	pose name "camera2Event"
+*endm
+
+**
+** REMOVAL SCRIPT
+**
+
+rscr
+enum 1 1 36473
+	kill targ
+next
