@@ -4,27 +4,18 @@
 *# Pray-File "cameraToEvent_meapilla.agents"
 *# DS-Name "Camera To Event Tool"
 
-*# desc = "This tool tracks the events that happen in your world by moving your camera over there. \nIdea by Mea, coding by Pilla"
+*# desc = "This tool tracks the events that happen in your world by moving your camera over there."
 *# Agent Animation File = "organexp2_mea.c16"
 *# Agent Sprite First Image = 38
 *# Agent Animation Gallery = "organexp2_mea"
-*# Web URL = "https://caosofthecreaturesrealm.wordpress.com/"
-*# Web Label = "CAOS of the Creatures Realm"
+*# Web URL = "https://pillazilla.wordpress.com"
+*# Web Label = "Pilla's DS Agents"
 
-*# attach organexp2_mea.c16 cameratoevent_meapilla.catalogue
+*# attach organexp2_mea.c16 cameratoevent_pilla.catalogue
 
 **
 ** Install script
 **
-
-** The corpse cleaner and cameraToEvent agents are separate agents with their own timer.
-** They get injected when the setting is on and removed when it's off.
-
-** new: simp 2 24 36473 "blnk" 1 0 0
-** corpse cleaner agent
-
-** new: simp 2 25 36473 "blnk" 1 0 0
-** camera to event agent
 
 **
 ** Create the Camera to event button
@@ -35,7 +26,7 @@ flto 10 197
 sets name "tooltip" "Camera2Event is disabled"
 
 **
-** Organ exporter Construction script
+** Camera2Event Construction script
 **
 
 **
@@ -54,7 +45,7 @@ scrp 1 1 36473 10
 endm
 
 **
-** Organ exporter "Camera to Event" button click
+** Camera2Event button click
 **
 
 scrp 1 1 36473 1
@@ -108,10 +99,10 @@ endm
 **
 ** Error script
 **
-*scrp 1 1 36473 255
-*	setv name "camera2Event" 0
-*	pose name "camera2Event"
-*endm
+scrp 1 1 36473 255
+	setv name "camera2Event" 0
+	pose name "camera2Event"
+endm
 
 **
 ** REMOVAL SCRIPT
