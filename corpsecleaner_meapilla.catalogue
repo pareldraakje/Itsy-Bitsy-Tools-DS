@@ -1,0 +1,11 @@
+TAG "Agent Help 1 1 36472"
+"Corpse Ghostifier"
+"This tool allows you to ghostify all dead creatures, doubling as a corpse cleaner. If the ghostifier is enabled, dead creatures will turn into a ghost and a soulflame. \nThe ghost scares surrounding creatures, encouraging them to stay away from places where other creatures have died. Clicking on the ghost makes it go away. The soul flame is invisible for other creatures, but it stays around for a while as a memorandum to the deceased creature. Clicking the soulflame brings up the creature history window."
+
+TAG "Agent Help 2 19 36472"
+"Soul flame"
+"A flame that burns as a memorandum to the deceased. This flame is invisible for other creatures, and clicking it brings up the creature history window of the deceased creature."
+
+TAG "Agent Help 2 20 36472"
+"Ghost"
+"This is the ghost of your creature! It scares other creatures away from the evil place that meant the end for this creature. If you slap it with the hand, it goes away."

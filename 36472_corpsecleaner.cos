@@ -1,0 +1,325 @@
+*
+* CAOS2PRAY CHUNK
+*
+*# Pray-File "Ghostifier_meapilla.agents"
+*# DS-Name "Ghostifying Corpse Cleaner"
+
+*# desc = "This tool allows you to ghostify all dead creatures, doubling as a corpse cleaner. If the ghostifier is enabled, dead creatures will turn into a ghost and a soulflame. \nSprites by Mea, coding by Pilla."
+*# Agent Animation File = "organexp2_mea.c16"
+*# Agent Sprite First Image = 40
+*# Agent Animation Gallery = "organexp2_mea"
+*# Web URL = "https://caosofthecreaturesrealm.wordpress.com/"
+*# Web Label = "CAOS of the Creatures Realm"
+
+*# attach organexp2_mea.c16 corpsecleaner_meapilla.catalogue
+
+**
+** Install script
+**
+
+** Create the corpse cleaner
+
+new: simp 1 1 36472 "organexp2_mea" 2 40 9000
+flto 10 180
+sets name "tooltip" "CorpseCleaner is disabled"
+
+**
+** Event scripts
+**
+
+**
+** corpse cleaner Construction script
+**
+scrp 1 1 36472 10
+** Remove other corpse cleaner instances
+	enum 1 1 36472
+		doif targ ne ownr
+			kill targ
+		endi
+	next
+	targ ownr
+** Set attributes
+	attr 38
+** Set tick
+	tick 200
+** Float relative to the screen
+	frel null
+endm
+
+**
+** corpse cleaner button click
+**
+scrp 1 1 36472 1
+** Toggle the variable
+	doif mame "corpseCleaner" eq 1
+		setv mame "corpseCleaner" 0
+	else
+		setv mame "corpseCleaner" 1
+	endi
+** Set the pose	
+	targ ownr
+	part 1
+	pose mame "corpseCleaner"
+	doif mame "corpseCleaner" eq 1
+		sets name "tooltip" "CorpseCleaner is enabled"
+	else
+		sets name "tooltip" "CorpseCleaner is disabled"
+	endi
+endm
+
+**
+** Corpse cleaner tick script
+**
+scrp 1 1 36472 9
+	tick 100
+	lock
+	enum 4 0 0
+** If the creature is dead
+		doif dead eq 1
+			inst
+			seta mame "targetCreature" targ
+** Set the moniker variable
+			sets mame "creatureMoniker" gtos 0
+** Get target creature name
+			sets mame "creatureName" hist name mame "creatureMoniker"
+			doif mame "creatureName" eq ""
+				sets mame "creatureName" "?"
+			endi
+** This script runs the Death Cleaner
+** Kill all death clouds
+			enum 1 1 56
+				kill targ
+			next
+** Set position for ghost and soulflame
+			targ mame "targetCreature"
+			setv va05 posx
+			setv va06 posy
+** Create ghost
+			targ mame "targetCreature"
+			gsub createGhost
+			dbg: outv va05
+			dbg: outv wdth
+			setv va07 va05
+			setv va08 wdth
+			divv va08 2
+			subv va07 va08
+
+			mvsf va07 va06
+** Create soulflame-
+			targ mame "targetCreature"
+			gsub createSoulflame
+			setv va07 va05
+			setv va08 wdth
+			divv va08 2
+			subv va07 va08
+			mvsf va07 va06
+** Kill all death clouds (again, just to be suuuure)
+			enum 1 1 56
+				kill targ
+			next
+**
+** Kill the body		
+			targ mame "targetCreature"
+			doif targ ne null
+				kill targ
+				seta mame "targetCreature" null
+			endi
+		endi
+	next
+**
+** Create ghost subroutine (Such Aiko, much improve, very wow)
+** 
+	subr createGhost
+* Set the face variant sprite
+		sets va00 face
+*get the gender/species
+		setv va02 stoi subs va00 2 1
+*if it's less than 4, it's male
+		doif va02 lt 4
+			setv va03 1
+		else
+*else it's female
+			setv va03 2
+*subtract 4 so that va02 now just contains the genus
+			subv va02 4
+		endi
+*add 1 because the indexes are weird
+		addv va02 1
+*get the breedslot
+		setv va04 char va00 4
+		subv va04 'a'
+*should make va01 the ACTUAL face sprite
+		sets va10 limb 0 va02 va03 cage va04
+* Get tints
+		setv va11 tint 1
+		setv va12 tint 2
+		setv va13 tint 3
+		setv va14 tint 4
+		setv va15 tint 5
+* Compose tooltip text
+		sets va17 "Ghost of "
+		adds va17 mame "creatureName"
+		adds va17 "!"
+** Create the ghost
+** Pick image number 153 of the face: vry scared
+		new: simp 2 20 36472 va10 1 153 4000
+* name "creatureMoniker" - target creature moniker
+		sets name "creatureMoniker" mame "creatureMoniker"
+* Tint the image
+		tino va11 va12 va13 va14 va15
+* Set the tooltip
+		sets name "tooltip" va17
+	retn
+**
+** Soulflame subroutine
+	subr createSoulflame
+** Create the flame
+		new: simp 2 19 36472 "blueflame_mea" 5 0 4000
+		sets name "creatureMoniker" mame "creatureMoniker"
+		sets va17 "Soul flame of "
+		adds va17 mame "creatureName"
+		sets name "tooltip" va17
+	retn
+
+endm
+
+**
+** Spirit flame creation script
+**
+scrp 2 19 36472 10
+	inst
+* attr: pickup 2 act 4 invi 16 collide 64 physics 128
+	core 0 48 0 27
+	attr 214
+	accg 0.8
+	aero 5
+	elas 0
+	fric 100
+	perm 100
+	enum 1 1 56
+		kill targ
+	next
+	slow
+	targ ownr
+	setv ov00 0
+	setv ov01 60
+	rnge 200
+	tick 4500
+	alph ov01 1
+	frat 10
+	anim [0 3 1 2 3 4 255]
+endm
+
+**
+** Corpse cleaner exception
+**
+scrp 1 1 36472 255
+	setv name "corpseCleaner" 0
+	pose name "corpseCleaner"
+endm
+
+
+**
+**
+** SPIRIT FLAME
+**
+**
+
+
+**
+** Spirit flame click
+**
+scrp 2 19 36472 1
+	new: comp 1 2 23 "ds_creature_history" 32 0 8520
+	mesg wrt+ targ 1000 mame "creatureMoniker" 1001 0
+endm
+
+**
+** Spirit flame tick
+**
+scrp 2 19 36472 9
+	kill ownr
+endm
+
+**
+** Spirit flame exception
+**
+scrp 2 19 36472 255
+	kill ownr
+endm
+
+
+**
+**
+** GHOST
+**
+**
+
+**
+** Ghost creation
+**
+scrp 2 20 36472 10
+	attr 4
+	inst
+	enum 1 1 56
+		kill targ
+	next
+	slow
+	targ ownr
+	setv ov00 0
+	setv ov01 60
+	rnge 200
+	tick 120
+	alph ov01 1
+	velo 0 -0.08
+	stim sign 76 0.15
+	sway shou 10 0.30 0 0 0 0 0 0
+endm
+
+**
+** Ghost click
+**
+scrp 2 20 36472 1
+	kill ownr
+endm
+
+**
+** Ghost tick
+**
+scrp 2 20 36472 9
+	tick rand 60 105
+	sway shou 10 0.09 0 0 0 0 0 0
+	addv ov00 1
+	addv ov01 5
+	alph ov01 1
+	doif ov00 gt 25
+		kill ownr
+	endi
+endm
+
+**
+** Ghost exception
+**
+scrp 2 20 36472 255
+	kill ownr
+endm
+
+**
+**
+** REMOVAL
+**
+**
+
+rscr
+enum 1 1 36472
+	kill targ
+next
+enum 2 19 36472
+	kill targ
+next
+enum 2 20 36472
+	kill targ
+next
+enum 2 24 36472
+	kill targ
+next
