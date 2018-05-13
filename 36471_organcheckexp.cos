@@ -1,0 +1,505 @@
+*
+* CAOS2PRAY CHUNK
+*
+*# Pray-File "organhealth_mea.agents"
+*# DS-Name "Organ Health Tool"
+
+*# desc = "This is a tool that exports or kills your creatures when the health of one of their organs drops below a certain percentage. \nIdea and sprites by Mea, coding by Pilla"
+*# Agent Animation File = "organexp2_mea.c16"
+*# Agent Sprite First Image = 5
+*# Agent Animation Gallery = "organexp2_mea"
+*# Web URL = "https://caosofthecreaturesrealm.wordpress.com/"
+*# Web Label = "CAOS of the Creatures Realm"
+
+*# attach organexp2_mea.c16 organexp_mea.catalogue
+
+**
+** Install script
+**
+
+** The corpse cleaner and cameraToEvent agents are separate agents with their own timer.
+** They get injected when the setting is on and removed when it's off.
+
+** new: simp 2 24 36471 "blnk" 1 0 0
+** corpse cleaner agent
+
+** new: simp 2 25 36471 "blnk" 1 0 0
+** camera to event agent
+
+** Create the organ exporter
+
+* Part 0 of the comp agent is the main animated button.
+new: comp 1 1 36471 "organexp2_mea" 15 23 9000
+* Set the Export variable
+setv name "autoexport" 0
+* Set the Autokill variable
+setv name "autokill" 0
+* Set the default percentage to take action. If -1, no value has been set yet.
+sets name "actionValue" "-1"
+* Float to 250 250 relative to the top left corner of the screen.
+flto 10 154
+**
+** Event scripts
+**
+
+**
+** Organ exporter Construction script
+**
+
+scrp 1 1 36471 10
+** Remove other organ exporter instances
+	enum 1 1 36471
+		doif targ ne ownr
+			kill targ
+		endi
+	next
+	targ ownr
+** Set attributes
+	attr 38
+** Set tick
+	tick 1
+** Animate the first part
+	part 0
+	frat 1
+	anim [1 2 3 4 5 6 7 8 9 10 11 12 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 255]
+** Float relative to the screen
+	frel null
+endm
+
+**
+** Organ exporter icon click (open/close window)
+**
+scrp 1 1 36471 1
+	inst
+** If the window is open and the button has been clicked: close windows
+	doif part 6 eq 1
+		doif hotp eq 0
+			setv va00 1
+** Kill all the stuff but the button
+			loop
+				pat: kill va00
+				addv va00 1
+			untl va00 gt 17
+		endi
+	else
+* Create the window
+* Very boring window creation stuff.
+* Not interesting to read. At all.
+* Move on.
+* set screen x y positions rel to icon (va50 va51)
+		setv name "guiwinx" 29
+		subv name "guiwinx" 8
+		setv name "gwinx" name "guiwinx"
+		subv name "gwinx" 8
+		setv name "gwiny" 0
+		setv name "gcol0" 10
+		addv name "gcol0" name "gwinx"
+		setv name "gcol1" 31
+		addv name "gcol1" name "gwinx"
+		setv name "gcol2" 53
+		addv name "gcol2" name "gwinx"
+		setv name "gcol3" 77
+		addv name "gcol3" name "gwinx"
+		setv name "gcol4" 100
+		addv name "gcol4" name "gwinx"
+		setv name "gcol5" 122
+		addv name "gcol5" name "gwinx"
+		setv name "gcol6" 152
+		addv name "gcol6" name "gwinx"
+		setv name "gyoffset" 0
+		setv name "growh" 16
+		pat: dull 1 "organexp2_mea" 0 name "guiwinx" name "gwiny" -1
+
+*	pat: dull 1 "organexp2_mea" 0 -66 -0 1
+* Create the text
+* set x y posions
+		setv va52 name "gcol0"
+		addv va53 name "gyoffset"
+* Organ health tool
+		pat: fixd 2 "organexp2_mea" 1 va52 va53 2 "greyontranschars"
+* Min organ health
+		addv va53 name "growh"
+		pat: fixd 3 "organexp2_mea" 1 va52 va53 2 "whiteontransparentchars"
+		pat: text 17 "organexp2_mea" 7 143 16 3 1001 "whiteontransparentchars"
+* Auto export & autokill
+		addv va53 name "growh"
+		setv va52 name "gcol0"
+		setv va54 va53
+		addv va54 7
+		setv va55 va52
+		addv va55 10
+		pat: butt 13 "organexp2_mea" 2 3 va55 va54 2 [1] 1001 0
+		setv va52 name "gcol1"
+		pat: fixd 9 "organexp2_mea" 1 va52 va53 2 "whiteontransparentchars"
+		addv va53 name "growh"
+		setv va52 name "gcol0"
+		setv va54 va53
+		addv va54 7
+		setv va55 va52
+		addv va55 10
+		pat: butt 14 "organexp2_mea" 2 3 va55 va54 2 [1] 1001 0
+		setv va52 name "gcol1"
+		pat: fixd 10 "organexp2_mea" 1 va52 va53 2 "whiteontransparentchars"
+* Target creature
+		addv va53 name "growh"
+		setv va52 name "gcol0"
+		pat: fixd 4 "organexp2_mea" 1 va52 va53 2 "greyontranschars"
+* Organ: + Value
+		addv va53 name "growh"
+		pat: fixd 5 "organexp2_mea" 1 va52 va53 2 "whiteontransparentchars"
+		setv va52 name "gcol2"
+		pat: fixd 6 "organexp2_mea" 1 va52 va53 2 "whiteontransparentchars"
+* Health: + Value
+		setv va52 name "gcol3"
+		pat: fixd 7 "organexp2_mea" 1 va52 va53 2 "whiteontransparentchars"
+		setv va52 name "gcol5"
+		pat: fixd 8 "organexp2_mea" 1 va52 va53 2 "whiteontransparentchars"
+* Export and Kill
+		addv va53 name "growh"
+		setv va52 name "gcol0"
+		setv va54 va53
+		addv va54 7
+		setv va55 va52
+		addv va55 10
+		pat: butt 15 "organexp2_mea" 2 3 va55 va54 2 [1] 1001 0
+		setv va52 name "gcol1"
+		pat: fixd 11 "organexp2_mea" 1 va52 va53 2 "whiteontransparentchars"
+		addv va53 name "growh"
+		setv va52 name "gcol0"
+		setv va54 va53
+		addv va54 7
+		setv va55 va52
+		addv va55 10
+		pat: butt 16 "organexp2_mea" 2 3 va55 va54 2 [1] 1001 0
+		setv va52 name "gcol1"
+		pat: fixd 12 "organexp2_mea" 1 va52 va53 2 "whiteontransparentchars"
+* Set the part text
+		part 2
+		ptxt "Organ Health Tool"
+		part 3
+		ptxt "Min. organ health:   %"
+		part 4
+		ptxt "Target creature"
+		part 5
+		ptxt "Organ:"
+		part 7
+		ptxt "Health:"
+		part 9
+		ptxt "Auto Export"
+		part 10
+		ptxt "Auto Instakill"
+		part 11
+		ptxt "Export"
+		part 12
+		ptxt "Instakill"
+
+* Set the button base animations (it will return to this animation after hover)
+		part 13
+		anim [0]
+		doif mame "autoexport" eq 2
+			anim [2]
+		endi
+		part 14
+		anim [0]
+		doif mame "autokill" eq 2
+			anim [2]
+		endi
+		part 15
+		anim [0]
+		part 16
+		anim [0]
+* Set focus to the input port if nothing has been entered yet
+		part 17
+		doif name "actionValue" eq "-1"
+			fcus
+		else
+			ptxt name "actionValue"
+		endi
+
+* Set the text for the currently active norn
+		doif norn ne null
+			targ norn
+			setv va00 orgn
+			subv va00 1
+			setv va01 200
+			setv va02 0
+			loop
+				setv va03 orgf va02 6
+				doif va02 eq 0
+					divv va03 5000
+				else
+					divv va03 10000
+				endi
+				doif va03 lt va01
+					setv va01 va03
+					setv va04 va02
+				endi
+				addv va02 1
+			untl va02 ge va00
+			targ ownr
+			part 6
+			ptxt vtos va04
+			part 8
+			ptxt vtos ftoi va01
+		else
+			targ ownr
+			part 6
+			ptxt "-"
+			part 8
+			ptxt "-"
+		endi
+	endi
+**
+**
+** The menu has been built. Yay. Phew.
+** Now refresh the screen
+	mesg writ ownr 1005
+endm
+
+
+** Timer script
+scrp 1 1 36471 9
+lock
+	seta mame "targetCreature" null
+** check if the ActionValue is set
+	doif mame "actionValue" ne "-1"
+** Check if the autoexport / autokill settings are on
+		doif name "autoexport" ne 0 or name "autokill" ne 0
+* Check if any creatures have a low organ health
+* va98 - lowest organ health
+			setv va98 200
+			inst
+* Enumerate over creatures
+			enum 4 0 0
+				seta mame "targetCreature" targ
+* the creature is not dead, get lowest organ health variables
+				doif dead ne 1
+** va00: total amount of organs. va01: currently checking organ, va02: health of current organ
+					setv va00 orgn
+					subv va00 1
+					setv va01 0
+					setv va02 200
+** va03: lowest organ health: organ number
+** va04: lowest organ health: organ health
+					setv va04 200
+					loop
+						setv va05 orgf va01 6
+						doif va01 eq 0
+							divv va05 5000
+						else
+							divv va05 10000
+						endi
+						doif va05 lt stoi mame "actionValue"
+** Autoexport or autokill
+							doif mame "autoexport" ne 0
+								gsub exportCreature
+							endi
+							doif mame "autokill" ne 0
+								gsub killCreature
+							endi							
+						addv va07 va00
+						endi
+					addv va07 1
+					untl va07 ge va00
+				endi
+			next
+		endi
+		tick 60
+	endi
+
+** Autokill
+	subr killCreature
+		targ mame "targetCreature"
+		doif targ ne null
+			dead
+		endi
+	retn
+
+** Autoexport
+	subr exportCreature
+	lock
+		targ mame "targetCreature"
+		doif targ ne null
+			inst
+			zomb 1
+			pray refr
+** Create teleport animation
+			setv va10 posx
+			setv va11 posy
+			new: simp 1 1 43 "teleport" 9 11 5001
+			subv va10 135
+			subv va11 77
+			mvto va10 va11
+			lock
+			snde "tele"
+			anim [0 0 1 1 2 2 3 3 4 4 5 5 6 6]
+			seta va12 targ
+			over
+			inst
+			targ mame "targetCreature"
+			doif targ = null
+				kill va12
+				stop
+			endi
+			zomb 0
+			sets name "Pray Extra Moniker" gtos 0
+
+** export the creature!
+			setv va00 pray expo "DSEX"
+			targ va12
+			kill targ
+		endi
+	retn
+endm
+
+** Selected creature changed
+scrp 1 1 36471 120
+** Run the screen update script
+	mesg writ ownr 1005
+endm
+
+**
+**
+** Screen upate script (1005)
+**
+**
+** This script updates the agent
+scrp 1 1 36471 1005
+	inst
+** Case: when the screen is opened
+	doif part 6 eq 1
+		part 17
+		sets name "actionValue" ptxt
+
+* Set the text for the currently active norn
+		doif norn ne null
+			targ norn
+			setv va00 orgn
+			subv va00 1
+			setv va01 200
+			setv va02 0
+			loop
+				setv va03 orgf va02 6
+				doif va02 eq 0
+					divv va03 5000
+				else
+					divv va03 10000
+				endi
+				doif va03 lt va01
+					setv va01 va03
+					setv va04 va02
+				endi
+				addv va02 1
+			untl va02 ge va00
+			targ ownr
+			part 6
+			ptxt vtos va04
+			part 8
+			ptxt vtos ftoi va01
+		else
+			targ ownr
+			part 6
+			ptxt "-"
+			part 8
+			ptxt "-"
+		endi
+	endi
+	tick 1
+endm
+
+
+** Button clicked or text entered
+
+scrp 1 1 36471 1001
+* Auto export
+	doif _p1_ eq 13
+		part 13
+		doif mame "autoexport" ne 2
+			setv mame "autoexport" 2
+			setv mame "autokill" 0
+			anim [2]
+		else
+			setv mame "autoexport" 0
+			anim [0]
+		endi
+* Autokill
+	elif _p1_ eq 14
+		part 14
+		doif mame "autokill" ne 2
+			setv mame "autokill" 2
+			setv mame "autoexport" 0
+			anim [2]
+		else
+			setv mame "autokill" 0
+			anim [0]
+		endi
+* Export targ
+	elif _p1_ eq 15
+		lock
+		targ norn
+		doif targ ne null
+			gsub exportCreature
+		endi
+		targ ownr
+		unlk
+* Kill targ
+	elif _p1_ eq 16
+		targ norn
+		doif targ ne null
+			dead
+		endi
+	endi
+
+	targ ownr
+	part 17
+	sets mame "actionValue" ptxt
+	part 13
+	pose mame "autoexport"
+	anms vtos mame "autoexport"
+	part 14
+	pose mame "autokill"
+	anms vtos mame "autokill"
+	tick 1
+
+	targ null
+	fcus
+
+
+	subr exportCreature
+			inst
+			seta mame "targetCreature" targ
+			zomb 1
+			pray refr
+** Create teleport animation
+			setv va10 posx
+			setv va11 posy
+			lock
+			new: simp 1 1 43 "teleport" 9 11 5001
+			subv va10 135
+			subv va11 77
+			mvto va10 va11
+			snde "tele"
+			anim [0 1 2 3 4 5 6]
+			seta va12 targ
+			over
+			inst
+			targ mame "targetCreature"
+			doif targ = null
+				kill va12
+				stop
+			endi
+			zomb 0
+			sets name "Pray Extra Moniker" gtos 0
+** export the creature!
+			setv va00 pray expo "DSEX"
+			targ mame "targetCreature"
+			kill targ
+		endi
+	retn
+endm
+
+
+rscr
+enum 1 1 36471
+	kill targ
+next
