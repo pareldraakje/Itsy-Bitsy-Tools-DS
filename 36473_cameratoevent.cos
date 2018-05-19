@@ -95,6 +95,15 @@ scrp 1 1 36473 127
 	endi
 endm
 
+**
+** custom camera2event trigger
+**
+scrp 1 1 36473 1001
+	doif mame "cameraToEvent" eq 1
+		cmrp _p1_ _p2_ 0
+	endi
+endm
+
 
 **
 ** Error script
