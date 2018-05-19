@@ -128,7 +128,7 @@ scrp 1 1 36471 1
 		addv va54 7
 		setv va55 va52
 		addv va55 10
-		pat: butt 13 "organexp2_mea" 2 3 va55 va54 2 [1] 1001 0
+		pat: butt 13 "organexp2_mea" 2 3 va55 va54 2 [1] 1001 1
 		setv va52 name "gcol1"
 		pat: fixd 9 "organexp2_mea" 1 va52 va53 2 "whiteontransparentchars"
 		addv va53 name "growh"
@@ -137,7 +137,7 @@ scrp 1 1 36471 1
 		addv va54 7
 		setv va55 va52
 		addv va55 10
-		pat: butt 14 "organexp2_mea" 2 3 va55 va54 2 [1] 1001 0
+		pat: butt 14 "organexp2_mea" 2 3 va55 va54 2 [1] 1001 1
 		setv va52 name "gcol1"
 		pat: fixd 10 "organexp2_mea" 1 va52 va53 2 "whiteontransparentchars"
 * Target creature
@@ -161,7 +161,7 @@ scrp 1 1 36471 1
 		addv va54 7
 		setv va55 va52
 		addv va55 10
-		pat: butt 15 "organexp2_mea" 2 3 va55 va54 2 [1] 1001 0
+		pat: butt 15 "organexp2_mea" 2 3 va55 va54 2 [1] 1001 1
 		setv va52 name "gcol1"
 		pat: fixd 11 "organexp2_mea" 1 va52 va53 2 "whiteontransparentchars"
 		addv va53 name "growh"
@@ -170,7 +170,7 @@ scrp 1 1 36471 1
 		addv va54 7
 		setv va55 va52
 		addv va55 10
-		pat: butt 16 "organexp2_mea" 2 3 va55 va54 2 [1] 1001 0
+		pat: butt 16 "organexp2_mea" 2 3 va55 va54 2 [1] 1001 1
 		setv va52 name "gcol1"
 		pat: fixd 12 "organexp2_mea" 1 va52 va53 2 "whiteontransparentchars"
 * Set the part text
@@ -196,12 +196,12 @@ scrp 1 1 36471 1
 * Set the button base animations (it will return to this animation after hover)
 		part 13
 		anim [0]
-		doif mame "autoexport" eq 2
+		doif mame "autoexport" ne 0
 			anim [2]
 		endi
 		part 14
 		anim [0]
-		doif mame "autokill" eq 2
+		doif mame "autokill" ne 0
 			anim [2]
 		endi
 		part 15
@@ -259,7 +259,8 @@ endm
 
 ** Timer script
 scrp 1 1 36471 9
-lock
+	tick 200
+
 	seta mame "targetCreature" null
 ** check if the ActionValue is set
 	doif mame "actionValue" ne "-1"
@@ -296,59 +297,43 @@ lock
 							endi
 							doif mame "autokill" ne 0
 								gsub killCreature
-							endi							
-						addv va07 va00
+							endi
+							addv va07 va00
 						endi
-					addv va07 1
+						addv va07 1
 					untl va07 ge va00
 				endi
 			next
+			slow
 		endi
 		tick 60
 	endi
 
-** Autokill
-	subr killCreature
-		targ mame "targetCreature"
-		doif targ ne null
-			dead
-		endi
-	retn
-
-** Autoexport
 	subr exportCreature
-	lock
-		targ mame "targetCreature"
-		doif targ ne null
-			inst
-			zomb 1
-			pray refr
+* Create teleport animation
+		setv va10 posx
+		setv va11 posy
+		subv va10 100
+		subv va11 77
+		new: simp 1 1 43 "teleport" 9 11 5001
+		seta name "targetCreature" mame "targetCreature"
+		mvto va10 va11
+		mesg writ targ 1000
+	retn
+	subr killCreature
+		inst
+		seta mame "targetCreature" targ
+		zomb 1
+		pray refr
 ** Create teleport animation
-			setv va10 posx
-			setv va11 posy
-			new: simp 1 1 43 "teleport" 9 11 5001
-			subv va10 135
-			subv va11 77
-			mvto va10 va11
-			lock
-			snde "tele"
-			anim [0 0 1 1 2 2 3 3 4 4 5 5 6 6]
-			seta va12 targ
-			over
-			inst
-			targ mame "targetCreature"
-			doif targ = null
-				kill va12
-				stop
-			endi
-			zomb 0
-			sets name "Pray Extra Moniker" gtos 0
-
-** export the creature!
-			setv va00 pray expo "DSEX"
-			targ va12
-			kill targ
-		endi
+		setv va10 posx
+		setv va11 posy
+		subv va10 100
+		subv va11 77
+		new: simp 1 1 43 "teleport" 9 11 5001
+		seta name "targetCreature" mame "targetCreature"
+		mvto va10 va11
+		mesg writ targ 1001
 	retn
 endm
 
@@ -414,7 +399,7 @@ scrp 1 1 36471 1001
 * Auto export
 	doif _p1_ eq 13
 		part 13
-		doif mame "autoexport" ne 2
+		doif mame "autoexport" eq 0
 			setv mame "autoexport" 2
 			setv mame "autokill" 0
 			anim [2]
@@ -425,7 +410,7 @@ scrp 1 1 36471 1001
 * Autokill
 	elif _p1_ eq 14
 		part 14
-		doif mame "autokill" ne 2
+		doif mame "autokill" eq 0
 			setv mame "autokill" 2
 			setv mame "autoexport" 0
 			anim [2]
@@ -435,9 +420,9 @@ scrp 1 1 36471 1001
 		endi
 * Export targ
 	elif _p1_ eq 15
-		lock
 		targ norn
 		doif targ ne null
+			seta mame "targetCreature" targ
 			gsub exportCreature
 		endi
 		targ ownr
@@ -446,7 +431,8 @@ scrp 1 1 36471 1001
 	elif _p1_ eq 16
 		targ norn
 		doif targ ne null
-			dead
+			seta mame "targetCreature" targ
+			gsub killCreature
 		endi
 	endi
 
@@ -466,38 +452,92 @@ scrp 1 1 36471 1001
 
 
 	subr exportCreature
-			inst
-			seta mame "targetCreature" targ
-			zomb 1
-			pray refr
+* Create teleport animation
+		setv va10 posx
+		setv va11 posy
+		subv va10 100
+		subv va11 77
+		new: simp 1 1 43 "teleport" 9 11 5001
+		seta name "targetCreature" mame "targetCreature"
+		mvto va10 va11
+		mesg writ targ 1000
+	retn
+	subr killCreature
 ** Create teleport animation
-			setv va10 posx
-			setv va11 posy
-			lock
-			new: simp 1 1 43 "teleport" 9 11 5001
-			subv va10 135
-			subv va11 77
-			mvto va10 va11
-			snde "tele"
-			anim [0 1 2 3 4 5 6]
-			seta va12 targ
-			over
-			inst
-			targ mame "targetCreature"
-			doif targ = null
-				kill va12
-				stop
-			endi
-			zomb 0
-			sets name "Pray Extra Moniker" gtos 0
-** export the creature!
-			setv va00 pray expo "DSEX"
-			targ mame "targetCreature"
-			kill targ
-		endi
+		setv va10 posx
+		setv va11 posy
+		subv va10 100
+		subv va11 77
+		new: simp 1 1 43 "teleport" 9 11 5001
+		seta name "targetCreature" mame "targetCreature"
+		mvto va10 va11
+		mesg writ targ 1001
 	retn
 endm
 
+
+** Export creature animation
+scrp 1 1 43 1000
+	setv va00 posx
+	setv va01 posy
+	rtar 1 1 36473
+	doif targ ne null
+		mesg wrt+ targ 1001 va00 va01 0
+	endi 
+	targ mame "targetCreature"
+	zomb 1
+	pray refr
+	doif targ = null
+		kill ownr
+		stop
+	endi
+	targ ownr
+	snde "tele"
+	anim [0 0 1 1 2 2 3 3 4 4 5 5 6 6]
+	over
+	inst
+	targ mame "targetCreature"
+	doif targ = null
+		kill ownr
+		stop
+	endi
+	zomb 0
+	sets name "Pray Extra Moniker" gtos 0
+** export the creature!
+	setv va00 pray expo "DSEX"
+	targ ownr
+	kill ownr
+endm
+
+** Kill creature animation
+scrp 1 1 43 1001
+	targ ownr
+	tint 255 0 0 128 128
+	setv va00 posx
+	setv va01 posy
+	rtar 1 1 36473
+	doif targ ne null
+		mesg wrt+ targ 1001 va00 va01 0
+	endi 
+	targ mame "targetCreature"
+	doif targ = null
+		kill ownr
+		stop
+	endi
+	targ ownr
+	snde "tele"
+	anim [0 0 1 1 2 2 3 3 4 4 5 5 6 6]
+	over
+	inst
+	targ mame "targetCreature"
+	doif targ = null
+		kill ownr
+		stop
+	endi
+	dead
+	targ ownr
+	kill ownr
+endm
 
 rscr
 enum 1 1 36471
