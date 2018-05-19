@@ -70,21 +70,21 @@ endm
 **
 
 scrp 1 1 36474 127
-	doif mame "lifePhotographer" eq 1
+	doif name "lifePhotographer" eq 1
 * make birth photographer, who will
 * take a photo after about five seconds
 		inst
 		setv va00 hist type _p1_ _p2_
 		seta va02 mtoc _p1_
-		doif va00 = 3 and va02 <> null
+		doif va00 = 4 and va02 <> null
 			targ va02
-			doif cage eq 2 or cage eq 4 or cage eq 5
+			doif cage eq 2 or cage ge 4
 				new: simp 1 2 37 "blnk" 0 0 0
 				seta ov00 va02
 				sets ov01 _p1_
 * randomise slightly, so creatures are more
 * likely to be in different poses
-				tick rand 10 30
+				tick rand 200 250
 			endi
 		endi
 	endi
