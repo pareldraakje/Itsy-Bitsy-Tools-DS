@@ -1,0 +1,17 @@
+*
+* CAOS2PRAY CHUNK
+*
+*# Pray-File "itsybitsytools_meapilla.agents"
+*# DS-Name "Itsy Bitsy Tools"
+
+*# desc = "Organ Exporter: exports or kills creatures with low organ health. Ghostifier: ghostifies dead creatures, doubling as a corpse cleaner. Camera2Event: Moves camera to events. Lifestage Photographer: creates pictures at adolescence, adult and old age.\nSprites by Mea, coding by Pilla"
+*# Agent Animation File = "organexp2_mea.c16"
+*# Agent Sprite First Image = 5
+*# Agent Animation Gallery = "organexp2_mea"
+*# Web URL = "https://caosofthecreaturesrealm.wordpress.com/"
+*# Web Label = "CAOS of the Creatures Realm"
+
+*# attach organexp2_mea.c16 organexp_mea.catalogue corpsecleaner_meapilla.catalogue cameratoevent_pilla.catalogue lifePhotographer_pilla.catalogue
+*# depend blnk.c16
+
+*# link 36471_organcheckexp.cos 36472_corpsecleaner.cos 36473_cameratoevent.cos 36474_lifestagephotographer.cos
