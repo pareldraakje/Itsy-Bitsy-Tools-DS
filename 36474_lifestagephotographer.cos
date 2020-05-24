@@ -5,13 +5,13 @@
 *# DS-Name "Lifestage Photographer Tool"
 
 *# desc = "This tool creates pictures of your norns when they reach adolescent, adult and old age."
-*# Agent Animation File = "lifephotographer_pilla.c16"
-*# Agent Sprite First Image = 1
-*# Agent Animation Gallery = "lifephotographer_pilla"
+*# Agent Animation File = "organexp2_mea.c16"
+*# Agent Sprite First Image = 43
+*# Agent Animation Gallery = "organexp2_mea"
 *# Web URL = "https://pillazilla.wordpress.com"
 *# Web Label = "Pilla's DS Agents"
 
-*# attach lifephotographer_pilla.c16 lifePhotographer_pilla.catalogue
+*# attach organexp2_mea.c16 lifePhotographer_pilla.catalogue
 *# depend blnk.c16
 
 **
@@ -22,7 +22,7 @@
 ** Create the Lifestage Photographer button
 **
 
-new: simp 1 1 36474 "lifephotographer_pilla" 2 0 9000
+new: simp 1 1 36474 "organexp2_mea" 2 43 9000
 flto 10 214
 sets name "tooltip" "Photographer is disabled"
 
