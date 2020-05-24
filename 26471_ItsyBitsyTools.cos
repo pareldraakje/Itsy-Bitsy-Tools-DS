@@ -11,7 +11,7 @@
 *# Web URL = "https://caosofthecreaturesrealm.wordpress.com/"
 *# Web Label = "CAOS of the Creatures Realm"
 
-*# attach organexp2_mea.c16 organexp_mea.catalogue corpsecleaner_meapilla.catalogue cameratoevent_pilla.catalogue lifePhotographer_pilla.catalogue
+*# attach organexp2_mea.c16 blueflame_mea.c16 organexp_mea.catalogue corpsecleaner_meapilla.catalogue cameratoevent_pilla.catalogue lifePhotographer_pilla.catalogue
 *# depend blnk.c16
 
 *# link 36471_organcheckexp.cos 36472_corpsecleaner.cos 36473_cameratoevent.cos 36474_lifestagephotographer.cos
