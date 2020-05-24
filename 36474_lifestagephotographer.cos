@@ -6,7 +6,7 @@
 
 *# desc = "This tool creates pictures of your norns when they reach adolescent, adult and old age."
 *# Agent Animation File = "lifephotographer_pilla.c16"
-*# Agent Sprite First Image = 38
+*# Agent Sprite First Image = 1
 *# Agent Animation Gallery = "lifephotographer_pilla"
 *# Web URL = "https://pillazilla.wordpress.com"
 *# Web Label = "Pilla's DS Agents"
