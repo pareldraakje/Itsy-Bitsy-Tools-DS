@@ -15,3 +15,26 @@
 *# depend blnk.c16
 
 *# link 36471_organcheckexp.cos 36472_corpsecleaner.cos 36473_cameratoevent.cos 36474_lifestagephotographer.cos
+
+rscr
+enum 1 1 36471
+	kill targ
+next
+enum 1 1 36472
+	kill targ
+next
+enum 2 19 36472
+	kill targ
+next
+enum 2 20 36472
+	kill targ
+next
+enum 2 24 36472
+	kill targ
+next
+enum 1 1 36473
+	kill targ
+next
+enum 1 1 36474
+	kill targ
+next
